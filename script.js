@@ -1,12 +1,13 @@
 /**
  * Ashish Kumar Maurya - Portfolio JavaScript
- * Interactive Features: Neural Canvas, Typewriter, AI Playground Simulators, Theme Switcher
+ * Interactive Features: 3D Holographic Tilt, Neural Mesh Canvas, Dynamic Typewriter, AI Playground Simulators
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
   initTypewriter();
   initNeuralCanvas();
+  init3DCardTilt();
   initSkillsFilter();
   initPlayground();
   initMobileNav();
@@ -34,7 +35,6 @@ function initThemeToggle() {
     }
   });
 
-  // Listen to OS theme changes if user hasn't explicitly set preference
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
     if (!localStorage.getItem('ashish-portfolio-theme')) {
       const theme = e.matches ? 'dark' : 'light';
@@ -44,7 +44,44 @@ function initThemeToggle() {
 }
 
 /* ==========================================================================
-   2. TYPEWRITER ANIMATION
+   2. 3D INTERACTIVE CARD TILT (Holographic Effect)
+   ========================================================================== */
+function init3DCardTilt() {
+  const cardWrap = document.getElementById('card3dWrap');
+  const photoCard = document.getElementById('photoCard3D');
+  if (!cardWrap || !photoCard) return;
+
+  let isHovered = false;
+
+  cardWrap.addEventListener('mouseenter', () => {
+    isHovered = true;
+    cardWrap.style.transition = 'transform 0.1s ease-out';
+  });
+
+  cardWrap.addEventListener('mousemove', (e) => {
+    if (!isHovered) return;
+    const rect = cardWrap.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -12; // tilt up/down
+    const rotateY = ((x - centerX) / centerX) * 14;  // tilt left/right
+
+    cardWrap.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+  });
+
+  cardWrap.addEventListener('mouseleave', () => {
+    isHovered = false;
+    cardWrap.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+    cardWrap.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+  });
+}
+
+/* ==========================================================================
+   3. TYPEWRITER ANIMATION (Evergreen)
    ========================================================================== */
 function initTypewriter() {
   const element = document.getElementById('typewriter');
@@ -53,8 +90,8 @@ function initTypewriter() {
   const words = [
     "Machine Learning & AI Pipelines",
     "Computer Vision & OpenCV",
-    "NLP & Sentiment Analysis",
-    "Data Structures & Algorithms",
+    "NLP & Sentiment Analytics",
+    "Applied Algorithmic Foundations",
     "Scalable Intelligent Software",
     "B.Tech CSE (AI) @ BBDU Lucknow"
   ];
@@ -79,11 +116,11 @@ function initTypewriter() {
 
     if (!isDeleting && charIndex === currentWord.length) {
       isDeleting = true;
-      typingSpeed = 1800; // Pause at end of word
+      typingSpeed = 1900;
     } else if (isDeleting && charIndex === 0) {
       isDeleting = false;
       wordIndex = (wordIndex + 1) % words.length;
-      typingSpeed = 400; // Pause before starting next word
+      typingSpeed = 400;
     }
 
     setTimeout(type, typingSpeed);
@@ -93,7 +130,7 @@ function initTypewriter() {
 }
 
 /* ==========================================================================
-   3. NEURAL PARTICLE CANVAS
+   4. NEURAL PARTICLE CANVAS
    ========================================================================== */
 function initNeuralCanvas() {
   const canvas = document.getElementById('bg-canvas');
@@ -108,15 +145,15 @@ function initNeuralCanvas() {
     height = canvas.height = window.innerHeight;
   });
 
-  const particleCount = Math.min(Math.floor((width * height) / 22000), 55);
+  const particleCount = Math.min(Math.floor((width * height) / 20000), 60);
   const particles = [];
 
   class Particle {
     constructor() {
       this.x = Math.random() * width;
       this.y = Math.random() * height;
-      this.vx = (Math.random() - 0.5) * 0.6;
-      this.vy = (Math.random() - 0.5) * 0.6;
+      this.vx = (Math.random() - 0.5) * 0.55;
+      this.vy = (Math.random() - 0.5) * 0.55;
       this.radius = Math.random() * 1.8 + 1;
     }
 
@@ -144,7 +181,6 @@ function initNeuralCanvas() {
     ctx.clearRect(0, 0, width, height);
     const theme = document.documentElement.getAttribute('data-theme') || 'dark';
 
-    // Draw connecting lines
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
         const dx = particles[i].x - particles[j].x;
@@ -165,7 +201,6 @@ function initNeuralCanvas() {
       }
     }
 
-    // Update & draw particles
     particles.forEach(p => {
       p.update();
       p.draw(theme);
@@ -178,7 +213,7 @@ function initNeuralCanvas() {
 }
 
 /* ==========================================================================
-   4. SKILLS FILTER TABS
+   5. SKILLS FILTER TABS
    ========================================================================== */
 function initSkillsFilter() {
   const tabs = document.querySelectorAll('.filter-tab');
@@ -204,7 +239,7 @@ function initSkillsFilter() {
 }
 
 /* ==========================================================================
-   5. INTERACTIVE AI PLAYGROUND (Simulators)
+   6. INTERACTIVE AI PLAYGROUND (Simulators)
    ========================================================================== */
 function initPlayground() {
   // A. NLP Sentiment Analyzer
@@ -232,7 +267,6 @@ function initPlayground() {
     const text = (sentimentInput.value || '').toLowerCase();
     if (!text.trim()) return;
 
-    // Word lists for simulation
     const positiveWords = ['exceeded', 'expectations', 'fast', 'clean', 'helpful', 'resolved', 'flawless', 'great', 'good', 'love', 'exceptional', 'durable', 'works', 'astonishingly', 'best', 'happy', 'recommended'];
     const negativeWords = ['terrible', 'slow', 'latency', 'crashes', 'buggy', 'bugs', 'poor', 'bad', 'horrible', 'worst', 'broken', 'issue', 'failed', 'hate', 'delay', 'disappointing'];
 
@@ -311,7 +345,6 @@ function initPlayground() {
       const chol = parseInt(cholSlider.value, 10);
       const glucose = parseInt(glucoseSlider.value, 10);
 
-      // Simulation algorithm reflecting clinical logistic regression / decision tree bounds
       let riskScore = 10;
       if (age > 45) riskScore += (age - 45) * 0.8;
       if (bp > 125) riskScore += (bp - 125) * 0.5;
@@ -350,7 +383,7 @@ function initPlayground() {
 }
 
 /* ==========================================================================
-   6. MOBILE NAVIGATION
+   7. MOBILE NAVIGATION
    ========================================================================== */
 function initMobileNav() {
   const toggleBtn = document.getElementById('mobile-toggle');
@@ -374,7 +407,7 @@ function initMobileNav() {
 }
 
 /* ==========================================================================
-   7. COPY BUTTONS
+   8. COPY BUTTONS
    ========================================================================== */
 function initCopyButtons() {
   const copyButtons = document.querySelectorAll('.copy-btn');
@@ -388,7 +421,7 @@ function initCopyButtons() {
         const originalText = btn.textContent;
         btn.textContent = 'Copied! ✓';
         btn.style.background = 'var(--success)';
-        btn.style.color = '#0a0f1d';
+        btn.style.color = '#070a14';
 
         setTimeout(() => {
           btn.textContent = originalText;
@@ -401,7 +434,7 @@ function initCopyButtons() {
 }
 
 /* ==========================================================================
-   8. CONTACT FORM (Mailto trigger)
+   9. CONTACT FORM (Mailto trigger)
    ========================================================================== */
 function initContactForm() {
   const form = document.getElementById('contact-form');

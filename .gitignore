@@ -1,3 +1,5 @@
-*.png
+portfolio_*.png
+resume_preview.png
+pdf_page_*.png
 .DS_Store
 Thumbs.db
